@@ -96,6 +96,7 @@ const MapComponent = ({ onFeatureSelect }) => {
     const subcountyLayer = new VectorLayer({
       title: 'Subcounties',
       source: subcountySource,
+      visible: false,
       style: function (feature) {
         if (feature.get('selected')) {
           return subcountySelectedStyle;
@@ -114,8 +115,8 @@ const MapComponent = ({ onFeatureSelect }) => {
       target: 'map',
       layers: [baseLayer, overlayGroup],
       view: new View({
-        center: [0, 0],
-        zoom: 2
+        center: [3438000, 100000],
+        zoom: 7
       })
     });
 
@@ -125,6 +126,17 @@ const MapComponent = ({ onFeatureSelect }) => {
     });
 
     map.addControl(layerSwitcher);
+
+    setTimeout(() => {
+      const layerSwitcherElement = document.querySelector('.layer-switcher');
+      if (layerSwitcherElement) {
+        // Check if mobile
+        const isMobile = window.innerWidth < 640;
+        layerSwitcherElement.style.top = isMobile ? '5rem' : '6rem'; // 64px on mobile, 16px on desktop
+        layerSwitcherElement.style.right = 'auto';
+        layerSwitcherElement.style.left = '0.5rem'; // 12px
+      }
+    }, 100);
 
     districtSource.once('featuresloadend', function () {
       const extent = districtSource.getExtent();
@@ -167,7 +179,13 @@ const MapComponent = ({ onFeatureSelect }) => {
         if (layerName === 'districts') {
           identifier = properties.NAME;
         } else if (layerName === 'subcounties') {
-          identifier = properties.SUBCOUNTY || properties.NAME;
+          identifier = properties.Subcounty
+          // Debug: log subcounty properties
+          console.log('Subcounty clicked:', {
+            SUBCOUNTY: properties.Subcounty,
+            NAME: properties.NAME,
+            all_properties: properties
+          });
         }
 
         onFeatureSelect({

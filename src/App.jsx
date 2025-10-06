@@ -13,7 +13,7 @@ const App = () => {
       </div>
       
       {/* Theme toggle - top right */}
-      <div className="absolute top-4 right-4 z-[1000]">
+      <div className="absolute top-5 right-3 z-[1000]">
         <ThemeToggle />
       </div>
       

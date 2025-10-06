@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useAdminData } from "../hooks/useAdminData";
 
 const DistrictPanel = ({ selectedFeature }) => {
-const [isExpanded, setIsExpanded] = useState(true);
+  const [isExpanded, setIsExpanded] = useState(true);
   const { data: dbData } = useAdminData(
     selectedFeature?.layerType,
     selectedFeature?.identifier,
@@ -133,6 +133,20 @@ const [isExpanded, setIsExpanded] = useState(true);
               </p>
             </div>
           )}
+
+          {/* Constituencies */}
+          {dbData.constituencies && dbData.constituencies.length > 0 && (
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                Constituencies
+              </p>
+              <ul className="list-disc list-inside text-gray-900 dark:text-gray-100">
+                {dbData.constituencies.map((constituency) => (
+                  <li key={constituency.id}>{constituency.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -161,33 +175,21 @@ const [isExpanded, setIsExpanded] = useState(true);
         </h2>
 
         {/* District (if available) */}
-        {dbData.district_id && (
+        {dbData.district && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            District ID: {dbData.district_id}
+            District: {dbData.district.name}
           </p>
         )}
 
         <div className="space-y-4">
-          {/* Subcounty Code */}
-          {dbData.subcounty_code && (
+          {/* County */}
+          {dbData.county && (
             <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
               <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Subcounty Code
+                County
               </p>
               <p className="text-lg font-semibold text-gray-900 dark:text-gray-100">
-                {dbData.subcounty_code}
-              </p>
-            </div>
-          )}
-
-          {/* Registered Voters */}
-          {dbData.registered_voters_2021 && (
-            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
-              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
-                Registered Voters
-              </p>
-              <p className="text-2xl font-bold text-gray-900 dark:text-gray-100">
-                {dbData.registered_voters_2021.toLocaleString()}
+                {dbData.county.name}
               </p>
             </div>
           )}
@@ -204,6 +206,7 @@ const [isExpanded, setIsExpanded] = useState(true);
             </div>
           )}
         </div>
+
       </div>
     );
   }

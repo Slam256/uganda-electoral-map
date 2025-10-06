@@ -22,46 +22,86 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
       setError(null);
 
       try {
-        // Determine which table to query
-        let tableName;
-        let matchField;
-
-        switch (adminLevel) {
-          case 'districts':
-            tableName = 'districts';
-            matchField = identifierType === 'name' ? 'name_normalized' : 'district_code';
-            break;
-          case 'subcounties':
-            tableName = 'subcounties';
-            matchField = identifierType === 'name' ? 'name_normalized' : 'subcounty_code';
-            break;
-          case 'counties':
-            tableName = 'counties';
-            matchField = identifierType === 'name' ? 'name_normalized' : 'county_code';
-            break;
-          case 'constituencies':
-            tableName = 'constituencies';
-            matchField = identifierType === 'name' ? 'name_normalized' : 'constituency_code';
-            break;
-          case 'regions':
-            tableName = 'regions';
-            matchField = identifierType === 'name' ? 'name_normalized' : 'region_code';
-            break;
-          default:
-            throw new Error(`Unknown admin level: ${adminLevel}`);
-        }
+        let result = null;
+        let queryError = null;
 
         // Normalize the identifier if matching by name
         const lookupValue = identifierType === 'name' 
           ? normalizeName(identifier) 
           : identifier;
 
-        // Query Supabase
-        const { data: result, error: queryError } = await supabase
-          .from(tableName)
-          .select('*')
-          .eq(matchField, lookupValue)
-          .single();
+        switch (adminLevel) {
+          case 'districts': {
+            const matchField = identifierType === 'name' ? 'name_normalized' : 'district_code';
+            
+            const { data: districtData, error: err } = await supabase
+              .from('districts')
+              .select(`id, name, region, population, registered_voters_2021, subregion,
+              constituencies:constituencies(id, name)`)
+              .eq(matchField, lookupValue)
+              .single();
+            
+            result = districtData;
+            queryError = err;
+            break;
+          }
+
+          case 'subcounties': {
+            const matchField = identifierType === 'name' ? 'name_normalized' : 'subcounty_code';
+            
+            // Query with joins to get district and county names and constituencies
+            const { data: subcountyData, error: err } = await supabase
+              .from('subcounties')
+              .select(`
+                name, id, population,
+                district:districts(id, name, district_code),
+                county:counties(id, name, county_code)
+              `)
+              .eq(matchField, lookupValue)
+              .single();
+            
+            result = subcountyData;
+            queryError = err;
+            break;
+          }
+
+          case 'counties': {
+            const matchField = identifierType === 'name' ? 'name_normalized' : 'county_code';
+            
+            const { data: countyData, error: err } = await supabase
+              .from('counties')
+              .select(`
+                *,
+                district:districts(id, name, district_code)
+              `)
+              .eq(matchField, lookupValue)
+              .single();
+            
+            result = countyData;
+            queryError = err;
+            break;
+          }
+
+          case 'constituencies': {
+            const matchField = identifierType === 'name' ? 'name_normalized' : 'constituency_code';
+            
+            const { data: constituencyData, error: err } = await supabase
+              .from('constituencies')
+              .select(`
+                *,
+                district:districts(id, name, district_code)
+              `)
+              .eq(matchField, lookupValue)
+              .single();
+            
+            result = constituencyData;
+            queryError = err;
+            break;
+          }
+
+          default:
+            throw new Error(`Unknown admin level: ${adminLevel}`);
+        }
 
         if (queryError) {
           // Not finding a match isn't necessarily an error
@@ -72,6 +112,7 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
             throw queryError;
           }
         } else {
+          console.log(`Fetched ${adminLevel} data:`, result);
           setData(result);
         }
       } catch (err) {
@@ -86,4 +127,4 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
   }, [adminLevel, identifier, identifierType]);
 
   return { data, loading, error };
-}
+};
