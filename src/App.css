@@ -1,0 +1,63 @@
+.App {
+  padding: 20px;
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+h1 {
+  margin-bottom: 20px;
+  color: #333;
+}
+
+.map-container {
+  display: flex;
+  gap: 20px;
+  height: 600px;
+}
+
+#map {
+  flex: 1;
+  min-width: 0;
+}
+
+.district-panel {
+  width: 350px;
+  padding: 20px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  overflow-y: auto;
+}
+
+.district-panel h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.3em;
+}
+
+.no-selection {
+  color: #666;
+  font-style: italic;
+}
+
+.district-details {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.property-row {
+  padding: 10px;
+  background: white;
+  border-radius: 4px;
+  border-left: 3px solid #3388ff;
+}
+
+.property-row strong {
+  display: block;
+  color: #555;
+  font-size: 0.85em;
+  margin-bottom: 4px;
+  text-transform: uppercase;
+}
