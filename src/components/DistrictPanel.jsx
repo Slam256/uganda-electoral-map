@@ -134,18 +134,6 @@ const [isExpanded, setIsExpanded] = useState(true);
             </div>
           )}
         </div>
-
-        {/* Debug: Show all DB fields */}
-        <details className="mt-6">
-          <summary className="cursor-pointer text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-            Show all database fields
-          </summary>
-          <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-900 rounded text-xs">
-            <pre className="overflow-auto">
-              {JSON.stringify(dbData, null, 2)}
-            </pre>
-          </div>
-        </details>
       </div>
     );
   }
@@ -216,18 +204,6 @@ const [isExpanded, setIsExpanded] = useState(true);
             </div>
           )}
         </div>
-
-        {/* Debug: Show all DB fields */}
-        <details className="mt-6">
-          <summary className="cursor-pointer text-sm text-gray-600 dark:text-gray-400 hover:text-gray-800 dark:hover:text-gray-200">
-            Show all database fields
-          </summary>
-          <div className="mt-2 p-3 bg-gray-100 dark:bg-gray-900 rounded text-xs">
-            <pre className="overflow-auto">
-              {JSON.stringify(dbData, null, 2)}
-            </pre>
-          </div>
-        </details>
       </div>
     );
   }
