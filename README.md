@@ -43,7 +43,7 @@ Interactive map visualizing Uganda's electoral landscape for the 2026 presidenti
   - Animate campaign progression over time
   - Color-coded routes by candidate/party
 
--[ ] **Expand Campaign Information Database**
+- [ ] **Expand Campaign Information Database**
   - Add nominated MPs information 
   - Add local government information 
 
