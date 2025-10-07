@@ -93,7 +93,7 @@ export const useCampaignRoutes = () => {
             partyAbbreviation: partyData?.abbreviation || null,
             color: assignedColor,
             stops: [],
-            visible: true // Initially visible
+            visible: false // Initially visible
           };
         }
 
