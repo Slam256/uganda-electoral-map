@@ -181,6 +181,20 @@ const DistrictPanel = ({ selectedFeature }) => {
               </p>
             </div>
           )}
+
+          {/* Constituencies */}
+          {dbData.constituencies && dbData.constituencies.length > 0 && (
+            <div className="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg">
+              <p className="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wide mb-1">
+                Constituencies
+              </p>
+              <ul className="list-disc list-inside text-gray-900 dark:text-gray-100">
+                {dbData.constituencies.map((constituency) => (
+                  <li key={constituency.id}>{constituency.name}</li>
+                ))}
+              </ul>
+            </div>
+          )}
         </div>
       </div>
     );
@@ -204,7 +218,7 @@ const DistrictPanel = ({ selectedFeature }) => {
         {/* District (if available) */}
         {dbData.district_id && (
           <p className="text-sm text-gray-600 dark:text-gray-400 mb-6">
-            District ID: {dbData.district_id}
+            District Name: {dbData.district_name}
           </p>
         )}
 
