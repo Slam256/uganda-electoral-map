@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useRef, useEffect, useState } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -12,10 +12,12 @@ import 'ol/ol.css';
 import LayerSwitcher from 'ol-layerswitcher';
 import 'ol/ol.css';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
+import CampaignRoutesLayer from './CampaignRoutesLayer';
 
-const MapComponent = ({ onFeatureSelect }) => {
+const MapComponent = ({ onFeatureSelect, routes }) => {
   const mapRef = useRef(null);
   const selectedFeatureRef = useRef(null);
+  const [mapInstance, setMapInstance] = useState(null);
 
   useEffect(() => {
     const baseLayer = new LayerGroup({
@@ -152,6 +154,11 @@ const MapComponent = ({ onFeatureSelect }) => {
       let clickedLayer = null;
 
       map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
+        if (feature.get('type') === 'campaign-stop' ||
+          feature.get('type') === 'campaign-route-line') {
+          return;
+        }
+        
         if (!clickedFeature) {  // Get the first one only
           clickedFeature = feature;
           clickedLayer = layer;
@@ -203,14 +210,37 @@ const MapComponent = ({ onFeatureSelect }) => {
     });
 
     mapRef.current = map;
+    setMapInstance(map);
 
     return () => {
       map.setTarget(null);
     };
   }, [onFeatureSelect]);
 
+  const handleCampaignStopClick = (stopInfo) => {
+    // Pass campaign stop info to parent
+    if (selectedFeatureRef.current) {
+      selectedFeatureRef.current.feature.set('selected', false);
+      selectedFeatureRef.current.layer.changed();
+      selectedFeatureRef.current = null;
+    }
+    onFeatureSelect({
+      layerType: 'campaign-stop',
+      ...stopInfo
+    });
+  };
+
   return (
-    <div id="map" className="w-full h-full rounded-lg shadow-lg"></div>
+    <>
+      <div id="map" className="w-full h-full rounded-lg shadow-lg"></div>
+      {mapInstance && (
+        <CampaignRoutesLayer
+          map={mapInstance}
+          routes={routes}
+          onStopClick={handleCampaignStopClick}
+        />
+      )}
+    </>
   );
 }
 
