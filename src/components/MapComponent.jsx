@@ -25,7 +25,7 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
       layers: [
         new TileLayer({
           source: new XYZ({
-            url: 'https://{a-d}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}.png',
+            url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             attributions: '© <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors, © <a href="https://carto.com/attributions">CARTO</a>'
           })
         })]
