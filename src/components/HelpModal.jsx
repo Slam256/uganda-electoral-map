@@ -16,8 +16,8 @@ const HelpModal = ({ isOpen, onClose }) => {
                 </svg>
               </div>
               <div>
-                <h2 className="text-2xl font-bold">Welcome to the District Map!</h2>
-                <p className="text-blue-100 text-sm">Interactive Uganda electoral boundaries & campaign tracking</p>
+                <h2 className="text-2xl font-bold">Uganda's Electoral Boundaries & Campaign Tracking Map</h2>
+                <p className="text-sm text-white/90">Welcome to the interactive Map.</p>
               </div>
             </div>
             <button
@@ -48,7 +48,7 @@ const HelpModal = ({ isOpen, onClose }) => {
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-gray-100">Explore Districts</p>
-                  <p className="text-sm text-gray-600 dark:text-gray-400">Click any district or subcounty to view population, voters, and administrative details</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Click any district or subcounty to view population, voters, and constituency details</p>
                 </div>
               </div>
               
@@ -112,7 +112,7 @@ const HelpModal = ({ isOpen, onClose }) => {
                 <span className="text-xl">🎯</span>
                 <div>
                   <p className="font-medium text-sm text-gray-900 dark:text-gray-100">Campaign Stops</p>
-                  <p className="text-xs text-gray-600 dark:text-gray-400">Numbered markers show tour sequence</p>
+                  <p className="text-xs text-gray-600 dark:text-gray-400"> Markers show tour sequence</p>
                 </div>
               </div>
               
