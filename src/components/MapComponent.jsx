@@ -1,4 +1,4 @@
-import { useRef, useEffect, useState } from 'react';
+import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
 import TileLayer from 'ol/layer/Tile';
@@ -14,10 +14,17 @@ import 'ol/ol.css';
 import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 import CampaignRoutesLayer from './CampaignRoutesLayer';
 
-const MapComponent = ({ onFeatureSelect, routes }) => {
-  const mapRef = useRef(null);
+const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
+  const mapContainerRef = useRef(null);
   const selectedFeatureRef = useRef(null);
+  const mapInstanceRef = useRef(null);
   const [mapInstance, setMapInstance] = useState(null);
+
+  useImperativeHandle(ref, () => ({
+  getMap: () => {
+    return mapInstanceRef.current;
+  }
+}), []);
 
   useEffect(() => {
     const baseLayer = new LayerGroup({
@@ -114,13 +121,15 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
     });
 
     const map = new Map({
-      target: 'map',
+      target: mapContainerRef.current,
       layers: [baseLayer, overlayGroup],
       view: new View({
         center: [3438000, 100000],
         zoom: 7
       })
     });
+
+    mapInstanceRef.current = map;
 
     const layerSwitcher = new LayerSwitcher({
       reverse: true,
@@ -186,20 +195,14 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
         if (layerName === 'districts') {
           identifier = properties.NAME;
         } else if (layerName === 'subcounties') {
-          identifier = properties.Subcounty
-          // Debug: log subcounty properties
-          console.log('Subcounty clicked:', {
-            SUBCOUNTY: properties.Subcounty,
-            NAME: properties.NAME,
-            all_properties: properties
-          });
+          identifier = properties.Subcounty          
         }
 
         onFeatureSelect({
           properties,
           layerType: layerName,
           identifier: identifier,
-          identifierType: 'name'  // Tell the hook we're matching by name
+          identifierType: 'name'
         });
 
         clickedLayer.changed();
@@ -209,7 +212,7 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
       }
     });
 
-    mapRef.current = map;
+    mapContainerRef.current = map;
     setMapInstance(map);
 
     return () => {
@@ -232,7 +235,7 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
 
   return (
     <>
-      <div id="map" className="w-full h-full rounded-lg shadow-lg"></div>
+      <div ref={mapContainerRef} id="map" className="w-full h-full rounded-lg shadow-lg"></div>
       {mapInstance && (
         <CampaignRoutesLayer
           map={mapInstance}
@@ -242,6 +245,6 @@ const MapComponent = ({ onFeatureSelect, routes }) => {
       )}
     </>
   );
-}
-
+});
+MapComponent.displayName = 'MapComponent';
 export default MapComponent;

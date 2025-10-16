@@ -70,8 +70,6 @@ export const useCampaignRoutes = () => {
         stop.districts?.centroid_lng
       );
 
-      console.log(`Loaded ${validStops.length} campaign stops with coordinates`);
-
       // Group stops by candidate
       const groupedByCandidate = {};
       
@@ -114,8 +112,6 @@ export const useCampaignRoutes = () => {
           new Date(a.date) - new Date(b.date)
         );
       });
-
-      console.log(`Found ${Object.keys(groupedByCandidate).length} candidates with routes`);
       
       setRoutes(groupedByCandidate);
 

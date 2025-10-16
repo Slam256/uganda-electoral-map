@@ -106,17 +106,14 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
         if (queryError) {
           // Not finding a match isn't necessarily an error
           if (queryError.code === 'PGRST116') {
-            console.log(`No ${adminLevel} record found for: ${identifier}`);
             setData(null);
           } else {
             throw queryError;
           }
         } else {
-          console.log(`Fetched ${adminLevel} data:`, result);
           setData(result);
         }
       } catch (err) {
-        console.error('Error fetching admin data:', err);
         setError(err.message);
       } finally {
         setLoading(false);
