@@ -159,7 +159,7 @@ const createStyle = (feature, color) => {
 
   if (featureType === 'campaign-stop') {
     // Style for campaign stop points
-    // const stopIndex = feature.get('stopIndex');
+    const stopIndex = feature.get('stopIndex');
 
     return new Style({
       image: new Circle({
@@ -172,15 +172,15 @@ const createStyle = (feature, color) => {
           width: 2
         })
       }),
-      // Show stop number on hover (optional)
-      // text: new Text({
-      //   text: stopIndex.toString(),
-      //   font: 'bold 10px sans-serif',
-      //   fill: new Fill({
-      //     color: '#ffffff'
-      //   }),
-      //   offsetY: 0
-      // })
+      // Show stop number
+      text: new Text({
+        text: stopIndex.toString(),
+        font: 'bold 9px sans-serif',
+        fill: new Fill({
+          color: '#ffffff'
+        }),
+        offsetY: 0
+      })
     });
   }
 

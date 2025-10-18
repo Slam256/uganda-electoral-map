@@ -95,15 +95,34 @@ Interactive map visualizing Uganda's electoral landscape for the 2026 presidenti
 uganda-electoral-map/
 ├── src/
 │   ├── components/
-│   │   ├── MapComponent.jsx      # OpenLayers map implementation
-│   │   ├── DistrictPanel.jsx     # Info panel with collapsible UI
-│   │   └── ThemeToggle.jsx       # Dark mode toggle
+│   │   ├── panels/
+│   │   │        ├── CampaignStopPanel.jsx
+│   │   │        ├── CollapsedPanel.jsx
+│   │   │        ├── DistrictInfoPanel.jsx
+│   │   │        ├── EmptyPanel.jsx
+│   │   │        ├── ErrorPanel.jsx
+│   │   │        ├── LoadingPanel.jsx
+│   │   │        └── SubCountyInfoPanel.jsx
+│   │   ├── shared/
+│   │   │        ├── Badge.jsx
+│   │   │        ├── CollapseButton.jsx
+│   │   │        ├── InfoCard.jsx
+│   │   │        ├── PanelContainer.jsx
+│   │   │        └── PanelHeader.jsx
+│   │   ├── MapComponent.jsx        # OpenLayers map implementation
+│   │   ├── DistrictPanel.jsx       # Info panel with collapsible UI
+│   │   ├── HelpModal.jsx           # 
+│   │   ├── CampaignRoutesLayer.jsx # 
+│   │   ├── SearchComponent.jsx     # 
+│   │   └── ThemeToggle.jsx         # Dark mode toggle
 │   ├── context/
 │   │   ├── ThemeContext.js       # Theme context
 │   │   ├── ThemeProvider.jsx     # Theme provider with localStorage
-│   │   └── useTheme.js          # Theme hook
+│   │   └── useTheme.js           # Theme hook
 │   ├── hooks/
-│   │   └── useAdminData.js       # Supabase data fetching hook
+│   │   ├── useAdminData.js          # Supabase data fetching hook
+│   │   ├── useCampaignRoutes.js     # Hook to fetch and organize campaign routes data
+│   │   └── useMapSearch.js          # Hook for search
 │   ├── utils/
 │   │   └── supabase.js           # Supabase client configuration
 │   ├── App.jsx                   # Main app component
