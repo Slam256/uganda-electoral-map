@@ -1,3 +1,30 @@
 /* stylelint-disable */
 @import "tailwindcss";
 @variant dark (&:where(.dark, .dark *));
+
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden; 
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+#root {
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  overflow: hidden;
+  position: relative;
+}
+
+.app-container {
+  width: 100%;
+  height: 100%;
+  overflow: hidden;
+  position: relative;
+}

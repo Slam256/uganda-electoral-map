@@ -71,7 +71,7 @@ const App = () => {
   const filteredRoutes = getFilteredRoutes();
 
   return (
-    <div className="relative w-full h-screen overflow-hidden">
+    <div className="app-container">
       {/* Full-screen map */}
       <div className="absolute inset-0">
         <MapComponent

@@ -71,10 +71,19 @@ const HelpModal = ({ isOpen, onClose }) => {
                   <p className="text-sm text-gray-600 dark:text-gray-400">Select individual candidates to see their specific campaign trail</p>
                 </div>
               </div>
-
               <div className="flex gap-3">
                 <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center font-bold">
                   4
+                </div>
+                <div>
+                  <p className="font-medium text-gray-900 dark:text-gray-100">Filter Campaign Stops by Date</p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400">Select date ranges to see stops within specific timeframes</p>
+                </div>
+              </div>
+
+              <div className="flex gap-3">
+                <div className="flex-shrink-0 w-8 h-8 bg-blue-100 dark:bg-blue-900 text-blue-600 dark:text-blue-300 rounded-full flex items-center justify-center font-bold">
+                  5
                 </div>
                 <div>
                   <p className="font-medium text-gray-900 dark:text-gray-100">Search Districts</p>
