@@ -49,13 +49,13 @@ const EnhancedDistrictInfoPanel = ({ data, onCollapse }) => {
 
   // Show district view with fixed height layout
   return (
-    <div className="w-full h-[80vh] bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col overflow-hidden">
+    <div className="w-full max-h-[80vh] bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col overflow-hidden">
       
       {/* HEADER SECTION - Fixed at top (35% of height) */}
       <div className="h-[35%] overflow-y-auto px-4 md:px-6 pt-4 md:pt-6 pb-3 border-b border-gray-200 dark:border-gray-700">
         
         {/* Badge and Collapse Button */}
-        <div className="mb-4 flex items-center gap-3">
+        <div className="mb-4 flex items-center justify-between gap-5">
           <Badge type="district" text="District" />
           <CollapseButton onClick={onCollapse} />
         </div>
