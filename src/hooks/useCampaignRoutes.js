@@ -23,7 +23,6 @@ const CANDIDATE_COLORS = [
 ];
 
 export const useCampaignRoutes = () => {
-   console.log('🚀 useCampaignRoutes hook called');
   const [routes, setRoutes] = useState({});
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
