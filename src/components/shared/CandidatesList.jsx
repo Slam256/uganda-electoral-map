@@ -3,7 +3,7 @@ import { CandidateCard } from './CandidateCard';
 const CandidatesList = ({ candidates, category, compact = true, loading = false }) => {
   if (loading) {
     return (
-      <div className="text-center py-4">
+      <div className="text-center py-2">
         <p className="text-sm text-gray-500 dark:text-gray-400">Loading candidates...</p>
       </div>
     );
@@ -11,7 +11,7 @@ const CandidatesList = ({ candidates, category, compact = true, loading = false 
 
   if (!candidates || candidates.length === 0) {
     return (
-      <div className="text-center py-4">
+      <div className="text-center py-2">
         <p className="text-sm text-gray-500 dark:text-gray-400 italic">
           No candidates nominated yet
         </p>
@@ -19,11 +19,11 @@ const CandidatesList = ({ candidates, category, compact = true, loading = false 
     );
   }
 
-  const categoryLabel = category === 'DWMP' ? 'District Woman MP' : 'Member of Parliament';
+  const categoryLabel = category === 'DWMP' ? 'Nominated District Woman MP' : 'Nominated Member of Parliament';
 
   return (
     <div className="space-y-1">
-      <div className="flex items-center justify-between mb-3">
+      <div className="flex items-center justify-between mb-2">
         <h3 className="text-sm font-semibold text-gray-600 dark:text-gray-400 uppercase tracking-wide">
           {categoryLabel}
         </h3>

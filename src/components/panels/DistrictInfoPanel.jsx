@@ -4,17 +4,17 @@ import { InfoCard } from "../shared/InfoCard";
 import { PanelContainer } from "../shared/PanelContainer";
 
 const DistrictInfoPanel = ({ data, onCollapse }) => (
-  <PanelContainer>
+   <div className="w-full h-full bg-white dark:bg-gray-800 rounded-lg shadow-lg flex flex-col overflow-hidden">
     <div className="mb-4 flex items-center gap-3">
       <Badge type="district" text="District" />
       <CollapseButton onClick={onCollapse} />
     </div>
 
-    <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-6">
+    <h2 className="text-lg md:text-lg font-bold text-gray-800 dark:text-gray-100">
       {data.name}
     </h2>
 
-    <div className="space-y-4">
+    <div className="space-y-2">
       {data.district_code && (
         <InfoCard label="District Code" value={data.district_code} />
       )}
@@ -42,7 +42,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => (
         </InfoCard>
       )}
     </div>
-  </PanelContainer>
+  </div>
 );
 
 export default DistrictInfoPanel;

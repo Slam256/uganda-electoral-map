@@ -32,7 +32,7 @@ export const useMPCandidates = (type, id, category = null) => {
             category,
             constituency_id,
             district_id,
-            political_parties (
+            political_parties!party_id (
               id,
               name,
               abbreviation,
@@ -49,7 +49,10 @@ export const useMPCandidates = (type, id, category = null) => {
           query = query.eq('category', category);
         }
 
-        const { data: result, error: queryError } = await query;
+        const res = await query;
+        console.log('Fetched MP candidates:', res);
+          const { data: result, error: queryError } = res;
+
 
         if (queryError) throw queryError;
 

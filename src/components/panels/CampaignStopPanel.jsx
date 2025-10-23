@@ -17,7 +17,7 @@ const CampaignStopPanel = ({ feature, onCollapse }) => {
 
   return (
     <PanelContainer>
-      <div className="mb-4 flex items-center gap-3">
+      <div className="mb-2 flex items-center gap-3">
         <div 
           className="w-6 h-6 rounded-full"
           style={{ backgroundColor: candidateColor }}
@@ -26,7 +26,7 @@ const CampaignStopPanel = ({ feature, onCollapse }) => {
         <CollapseButton onClick={onCollapse} />
       </div>
 
-      <h2 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+      <h2 className="text-lg md:text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
         {candidateName}
       </h2>
 
