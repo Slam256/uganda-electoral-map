@@ -7,6 +7,7 @@ import LoadingPanel from "./panels/LoadingPanel";
 import ErrorPanel from "./panels/ErrorPanel";
 import DistrictInfoPanel from "./panels/DistrictInfoPanel";
 import SubcountyInfoPanel from "./panels/SubcountyInfoPanel";
+import EnhancedDistrictInfoPanel from "./panels/EnhancedDistrictInfoPanel";
 
 const DistrictPanel = ({ selectedFeature }) => {
   const [isExpanded, setIsExpanded] = useState(true);
@@ -73,7 +74,7 @@ const DistrictPanel = ({ selectedFeature }) => {
     switch (selectedFeature.layerType) {
       case 'districts':
         return (
-          <DistrictInfoPanel 
+          <EnhancedDistrictInfoPanel
             data={dbData}
             onCollapse={() => setIsExpanded(false)}
           />
