@@ -123,7 +123,7 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
           layerName: 'subcounties'
         }),
         // Use your edge function URL
-        url: `${TILE_ENDPOINT }/subcounties/{z}/{x}/{y}`
+        url: `${TILE_ENDPOINT}/subcounties/{z}/{x}/{y}`
       }),
 
       style: (feature) => {
