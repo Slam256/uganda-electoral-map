@@ -18,24 +18,45 @@ import 'ol-layerswitcher/dist/ol-layerswitcher.css';
 import CampaignRoutesLayer from './CampaignRoutesLayer';
 
 const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
-  const mapContainerRef = useRef(null);
-  const selectedFeatureRef = useRef(null);
-  const mapInstanceRef = useRef(null);
-  const [mapInstance, setMapInstance] = useState(null);
-
-  // NEW: Track selection for vector tiles
-  const [selectedTileFeature, setSelectedTileFeature] = useState({
+  const mapContainerRef = useRef(null);  
+  const mapInstanceRef = useRef(null); 
+  const selectedFeatureRef = useRef(null); 
+  const selectedTileFeatureRef = useRef({
     id: null,
-    layer: null
+    layerName: null
   });
 
+  const [mapInstance, setMapInstance] = useState(null);
+
   useImperativeHandle(ref, () => ({
-    getMap: () => {
-      return mapInstanceRef.current;
-    }
+    getMap: () => mapInstanceRef.current
   }), []);
 
   useEffect(() => {
+    // Get tile endpoint from environment
+    const TILE_ENDPOINT = `${import.meta.env.VITE_APP_SUPABASE_URL}/functions/v1/map-tiles`;
+    const styles = {
+      district: {
+        default: new Style({
+          stroke: new Stroke({ color: '#3388ff', width: 2 }),
+          fill: new Fill({ color: 'rgba(51, 136, 255, 0.1)' })
+        }),
+        selected: new Style({
+          stroke: new Stroke({ color: '#ff6b35', width: 3 }),
+          fill: new Fill({ color: 'rgba(255, 107, 53, 0.3)' })
+        })
+      },
+      subcounty: {
+        default: new Style({
+          stroke: new Stroke({ color: '#10b981', width: 1.5 }),
+          fill: new Fill({ color: 'rgba(16, 185, 129, 0.1)' })
+        }),
+        selected: new Style({
+          stroke: new Stroke({ color: '#f59e0b', width: 3 }),
+          fill: new Fill({ color: 'rgba(245, 158, 11, 0.3)' })
+        })
+      }
+    };
     const baseLayer = new LayerGroup({
       title: 'Base Maps',
       layers: [
@@ -48,50 +69,6 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       ]
     });
 
-    const TILE_ENDPOINT = `${import.meta.env.VITE_APP_SUPABASE_URL}/functions/v1/map-tiles`;
-
-    // Styles
-    const districtDefaultStyle = new Style({
-      stroke: new Stroke({
-        color: '#3388ff',
-        width: 2
-      }),
-      fill: new Fill({
-        color: 'rgba(51, 136, 255, 0.1)'
-      })
-    });
-
-    const districtSelectedStyle = new Style({
-      stroke: new Stroke({
-        color: '#ff6b35',
-        width: 3
-      }),
-      fill: new Fill({
-        color: 'rgba(255, 107, 53, 0.3)'
-      })
-    });
-
-    const subcountyDefaultStyle = new Style({
-      stroke: new Stroke({
-        color: '#10b981',
-        width: 1.5
-      }),
-      fill: new Fill({
-        color: 'rgba(16, 185, 129, 0.1)'
-      })
-    });
-
-    const subcountySelectedStyle = new Style({
-      stroke: new Stroke({
-        color: '#f59e0b',
-        width: 3
-      }),
-      fill: new Fill({
-        color: 'rgba(245, 158, 11, 0.3)'
-      })
-    });
-
-    // DISTRICTS - Still from ArcGIS (VectorLayer)
     const districtSource = new VectorSource({
       url: 'https://services2.arcgis.com/iq8zYa0SRsvIFFKz/arcgis/rest/services/UGA_District_Boundaries_2024/FeatureServer/0/query?f=json&where=1=1&outFields=*&outSR=3857',
       format: new EsriJSON()
@@ -101,10 +78,10 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       title: 'Districts',
       source: districtSource,
       style: (feature) => {
-        if (feature.get('selected')) {
-          return districtSelectedStyle;
-        }
-        return districtDefaultStyle;
+        // Check if this feature is selected
+        return feature.get('selected') 
+          ? styles.district.selected 
+          : styles.district.default;
       },
       renderBuffer: 100,
       properties: { name: 'districts' }
@@ -116,38 +93,37 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       minZoom: 6,
       visible: false,
       properties: { name: 'subcounties' },
-
       source: new VectorTileSource({
         format: new MVT({
           featureClass: Feature,
-          layerName: 'subcounties'
+          layers: ['subcounties']
         }),
-        // Use your edge function URL
         url: `${TILE_ENDPOINT}/subcounties/{z}/{x}/{y}`
       }),
-
       style: (feature) => {
-        const featureId = feature.getId() || feature.get('id');
-
-        if (selectedTileFeature.id === featureId &&
-          selectedTileFeature.layer === 'subcounties') {
-          return subcountySelectedStyle;
-        }
-        return subcountyDefaultStyle;
-      }
+        const properties = feature.getProperties();
+        const featureId = properties.id;
+        
+        const isSelected = 
+          selectedTileFeatureRef.current.id === featureId &&
+          selectedTileFeatureRef.current.layerName === 'subcounties';
+        
+        return isSelected 
+          ? styles.subcounty.selected 
+          : styles.subcounty.default;
+      },
+      renderBuffer: 100
     });
-    
-     
+
     const overlayGroup = new LayerGroup({
       title: 'Administrative Boundaries',
       layers: [districtLayer, subcountyLayer]
     });
-
     const map = new Map({
       target: mapContainerRef.current,
-      layers: [baseLayer, overlayGroup ],
+      layers: [baseLayer, overlayGroup],
       view: new View({
-        center: [3607372, 145021],
+        center: [3607372, 145021], // Center on Uganda
         zoom: 8
       })
     });
@@ -158,10 +134,8 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       reverse: true,
       groupSelectStyle: 'children'
     });
-
     map.addControl(layerSwitcher);
 
-    // Position layer switcher
     setTimeout(() => {
       const layerSwitcherElement = document.querySelector('.layer-switcher');
       if (layerSwitcherElement) {
@@ -172,7 +146,6 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       }
     }, 100);
 
-    // Fit to districts when loaded
     districtSource.once('featuresloadend', function () {
       const extent = districtSource.getExtent();
       map.getView().fit(extent, {
@@ -181,115 +154,36 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
       });
     });
 
-    // UPDATED Click Handler - Handles both vector layers and vector tiles
-    map.on('click', function (event) {
+    map.on('click', function(event) {
       let clickedFeature = null;
       let clickedLayer = null;
       let isVectorTile = false;
 
-      // Check what was clicked
-      map.forEachFeatureAtPixel(event.pixel, function (feature, layer) {
-        // Skip campaign features
+      map.forEachFeatureAtPixel(event.pixel, function(feature, layer) {
         if (feature.get('type') === 'campaign-stop' ||
-          feature.get('type') === 'campaign-route-line') {
+            feature.get('type') === 'campaign-route-line') {
           return;
         }
-
         if (!clickedFeature) {
           clickedFeature = feature;
           clickedLayer = layer;
-          // Check if it's a vector tile layer
           isVectorTile = layer instanceof VectorTileLayer;
         }
       });
 
-      // Handle deselection
-      // Clear regular vector layer selection
-      if (selectedFeatureRef.current && !isVectorTile) {
-        selectedFeatureRef.current.feature.set('selected', false);
-        selectedFeatureRef.current.layer.changed();
-        selectedFeatureRef.current = null;
-      }
-
-      // Clear vector tile selection
-      if (selectedTileFeature.id !== null && isVectorTile) {
-        setSelectedTileFeature({ id: null, layer: null });
-        // Refresh all vector tile layers
-        map.getLayers().getArray().forEach(layer => {
-          if (layer instanceof LayerGroup) {
-            layer.getLayers().getArray().forEach(subLayer => {
-              if (subLayer instanceof VectorTileLayer) {
-                subLayer.changed();
-              }
-            });
-          }
-        });
-      }
+      clearAllSelections();
 
       if (clickedFeature && clickedLayer) {
         const properties = clickedFeature.getProperties();
         const layerName = clickedLayer.get('name');
 
         if (isVectorTile) {
-          // Handle vector tile selection
-          const featureId = clickedFeature.getId() || properties.id;
-
-          // Update selection state for vector tiles
-          setSelectedTileFeature({
-            id: featureId,
-            layer: layerName
-          });
-
-          // Force redraw of the vector tile layer
-          clickedLayer.changed();
-
-          // Extract identifier from properties
-          let identifier = properties.name || properties.subcounty_name || properties.NAME;
-
-          onFeatureSelect({
-            properties,
-            layerType: layerName,
-            identifier: identifier,
-            identifierType: 'name'
-          });
-
+          handleVectorTileClick(clickedFeature, properties, layerName);
         } else {
-          // Handle regular vector layer selection (districts)
-          clickedFeature.set('selected', true);
-
-          selectedFeatureRef.current = {
-            feature: clickedFeature,
-            layer: clickedLayer
-          };
-
-          let identifier = null;
-          if (layerName === 'districts') {
-            identifier = properties.NAME;
-          }
-
-          onFeatureSelect({
-            properties,
-            layerType: layerName,
-            identifier: identifier,
-            identifierType: 'name'
-          });
-
-          clickedLayer.changed();
+          handleVectorLayerClick(clickedFeature, clickedLayer, properties, layerName);
         }
       } else {
-        // Nothing clicked - clear all selections
-        selectedFeatureRef.current = null;
-        setSelectedTileFeature({ id: null, layer: null });
         onFeatureSelect(null);
-
-        // Refresh all layers
-        map.getLayers().getArray().forEach(layer => {
-          if (layer instanceof LayerGroup) {
-            layer.getLayers().getArray().forEach(subLayer => {
-              subLayer.changed();
-            });
-          }
-        });
       }
     });
 
@@ -298,42 +192,115 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
     return () => {
       map.setTarget(null);
     };
-  }, []); // Remove onFeatureSelect from dependencies
+  }, [onFeatureSelect]);
 
-  // Update when selection state changes
-  useEffect(() => {
-    if (mapInstance) {
-      // Force redraw of vector tile layers when selection changes
-      mapInstance.getLayers().getArray().forEach(layer => {
+  const clearAllSelections = () => {
+    // Clear regular vector layer selections
+    if (selectedFeatureRef.current) {
+      selectedFeatureRef.current.feature.set('selected', false);
+      selectedFeatureRef.current.layer.changed();
+      selectedFeatureRef.current = null;
+    }
+
+    // Clear vector tile selections
+    if (selectedTileFeatureRef.current.id !== null) {
+      selectedTileFeatureRef.current = { id: null, layerName: null };
+      
+      // Force redraw of subcounty layer
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.getLayers().forEach(layer => {
+          if (layer instanceof LayerGroup) {
+            layer.getLayers().forEach(subLayer => {
+              if (subLayer instanceof VectorTileLayer && 
+                  subLayer.get('name') === 'subcounties') {
+                subLayer.changed();
+              }
+            });
+          }
+        });
+      }
+    }
+  };
+
+  const handleVectorTileClick = (feature, properties, layerName) => {
+    const featureId = properties.id;
+
+    // Update the ref (this is what the style function checks!)
+    selectedTileFeatureRef.current = {
+      id: featureId,
+      layerName: layerName
+    };
+
+    // Force the layer to redraw with new styles
+    if (mapInstanceRef.current) {
+      mapInstanceRef.current.getLayers().forEach(layer => {
         if (layer instanceof LayerGroup) {
-          layer.getLayers().getArray().forEach(subLayer => {
-            if (subLayer instanceof VectorTileLayer) {
+          layer.getLayers().forEach(subLayer => {
+            if (subLayer instanceof VectorTileLayer && 
+                subLayer.get('name') === layerName) {
               subLayer.changed();
             }
           });
         }
       });
     }
-  }, [selectedTileFeature, mapInstance]);
+    const identifier = properties.name || 
+                      properties.subcounty_name || 
+                      properties.NAME;
+
+    onFeatureSelect({
+      properties,
+      layerType: layerName,
+      identifier: identifier,
+      identifierType: 'name'
+    });
+  };
+
+  const handleVectorLayerClick = (feature, layer, properties, layerName) => {
+    // Mark feature as selected
+    feature.set('selected', true);
+
+    // Store reference to selected feature
+    selectedFeatureRef.current = {
+      feature: feature,
+      layer: layer
+    };
+
+    // Extract identifier
+    let identifier = null;
+    if (layerName === 'districts') {
+      identifier = properties.NAME;
+    }
+
+    // Notify parent
+    onFeatureSelect({
+      properties,
+      layerType: layerName,
+      identifier: identifier,
+      identifierType: 'name'
+    });
+
+    // Redraw layer to show selection
+    layer.changed();
+  };
 
   const handleCampaignStopClick = (stopInfo) => {
-    // Clear any existing selections
-    if (selectedFeatureRef.current) {
-      selectedFeatureRef.current.feature.set('selected', false);
-      selectedFeatureRef.current.layer.changed();
-      selectedFeatureRef.current = null;
-    }
-    setSelectedTileFeature({ id: null, layer: null });
+    // Clear all map selections
+    clearAllSelections();
 
+    // Notify parent about campaign stop
     onFeatureSelect({
       layerType: 'campaign-stop',
       ...stopInfo
     });
   };
-
   return (
     <>
-      <div ref={mapContainerRef} id="map" className="w-full h-full rounded-lg shadow-lg"></div>
+      <div 
+        ref={mapContainerRef} 
+        id="map" 
+        className="w-full h-full rounded-lg shadow-lg"
+      />
       {mapInstance && (
         <CampaignRoutesLayer
           map={mapInstance}
