@@ -3,7 +3,7 @@
  * This utility helps match database candidate names to local image files
  */
 
-// Import all candidate photos
+// Import all candidate photos locally
 import kyagulanyiPhoto from '../assets/candidate photos/kyagulanyi.jpg';
 import museveniPhoto from '../assets/candidate photos/museveni.jpg';
 import mabiriziPhoto from '../assets/candidate photos/mabirizi-joseph.jpeg';
