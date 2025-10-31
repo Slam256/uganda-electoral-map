@@ -61,6 +61,7 @@ const CampaignRoutesLayer = ({ map, routes, onStopClick }) => {
           type: 'campaign-stop',
           candidateId: candidate.candidateId,
           candidateName: candidate.candidateName,
+          candidateShortCode: candidate.candidateShortCode,
           candidateColor: candidate.color,
           partyName: candidate.partyName,
           partyAbbreviation: candidate.partyAbbreviation,
