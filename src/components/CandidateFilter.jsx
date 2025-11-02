@@ -7,6 +7,8 @@
  */
 
 import { useState, useEffect } from 'react';
+import Avatar from './shared/Avatar';
+import { getCandidatePhoto } from '../utils/candidatePhotos';
 
 const CandidateFilter = ({ 
   routes, 
@@ -281,10 +283,13 @@ const CandidateFilter = ({
                       className="w-4 h-4 text-blue-600 focus:ring-2 focus:ring-blue-500 cursor-pointer"
                     />
 
-                    <div
-                      className="w-5 h-5 rounded-full flex-shrink-0 border-2 border-white dark:border-gray-800 shadow-sm"
-                      style={{ backgroundColor: candidate.color }}
-                    ></div>
+                    <Avatar
+                      src={getCandidatePhoto(candidate.candidateName)}
+                      alt={candidate.candidateName}
+                      fallbackColor={candidate.color}
+                      statusColor={candidate.color}
+                      size="md"
+                    />
 
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-medium text-gray-900 dark:text-gray-100 truncate">
