@@ -36,21 +36,22 @@ Interactive map visualizing Uganda's electoral landscape for the 2026 presidenti
   - Collapsible information panels
   - Responsive design for desktop and mobile
 
-### What's Next 🚀
-
-- [ ] **Campaign Route Visualization**
+- **Campaign Route Visualization**
   - Display presidential candidate tour routes on map
   - Animate campaign progression over time
   - Color-coded routes by candidate/party
 
+- **Advanced Filtering & Search**
+  - Search districts/subcounties by name
+  - Filter campaign events by date range
+
+### What's Next 🚀
 - [ ] **Expand Campaign Information Database**
   - Add nominated MPs information 
   - Add local government information 
 
 - [ ] **Advanced Filtering & Search**
-  - Search districts/subcounties by name
-  - Filter campaign events by date range
-  - Filter by candidate or political party
+  - Filter by MP candidate or political party
   - Multi-layer filtering (show only contested districts)
 
 - [ ] **Constituency Boundaries**
