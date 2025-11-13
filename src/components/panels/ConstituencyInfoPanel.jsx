@@ -2,7 +2,8 @@ import { PanelContainer } from "../shared/PanelContainer";
 import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
-import { VoterStatisticsCard, CompactVoterStats } from "../shared/VoterStatisticsCard";
+import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
+import { CompactVoterStats } from "../shared/CompactVoterStats";
 
 const ConstituencyInfoPanel = ({ data, onCollapse }) => {
   const voterStats = data?.voterStats || {};

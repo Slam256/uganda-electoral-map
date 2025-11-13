@@ -3,7 +3,7 @@ import { PanelContainer } from "../shared/PanelContainer";
 import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
-import { CompactVoterStats } from "../shared/VoterStatisticsCard";
+import { CompactVoterStats } from "../shared/CompactVoterStats";
 
 const ParishInfoPanel = ({ data, onCollapse }) => {
   const [showAllStations, setShowAllStations] = useState(false);
