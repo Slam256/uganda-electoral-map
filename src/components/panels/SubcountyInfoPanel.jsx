@@ -2,11 +2,12 @@ import { PanelContainer } from "../shared/PanelContainer";
 import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
-import { VoterStatisticsCard, CompactVoterStats } from "../shared/VoterStatisticsCard";
+import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
+import { CompactVoterStats } from "../shared/CompactVoterStats";
 
 const SubcountyInfoPanel = ({ data, onCollapse }) => {
   const voterStats = data?.voterStats || {};
-  
+
   return (
     <PanelContainer>
       <div className="mb-4 flex items-center gap-3">
@@ -41,7 +42,7 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
 
         {/* Compact Voter Stats for quick overview */}
         {voterStats.total_voters_2024 && (
-          <CompactVoterStats 
+          <CompactVoterStats
             totalVoters={voterStats.total_voters_2024}
             pollingStations={voterStats.polling_station_count}
             growthRate={voterStats.voter_growth_percentage}
@@ -50,8 +51,8 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
 
         {/* Population Data */}
         {data.population && (
-          <InfoCard 
-            label="Population (Census)" 
+          <InfoCard
+            label="Population (Census)"
             value={data.population.toLocaleString()}
             isLarge={true}
           />
@@ -67,7 +68,7 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
           <InfoCard label="Top Parishes by Voter Registration">
             <div className="space-y-2">
               {voterStats.top_parishes.map((parish, index) => (
-                <div 
+                <div
                   key={parish.parish_id}
                   className="flex items-center justify-between py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors"
                 >
@@ -110,13 +111,13 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
         {/* Statistics Summary */}
         {voterStats.polling_station_count > 0 && (
           <div className="grid grid-cols-2 gap-3">
-            <InfoCard 
-              label="Avg Voters/Station" 
-              value={voterStats.avg_voters_per_station?.toLocaleString() || '0'} 
+            <InfoCard
+              label="Avg Voters/Station"
+              value={voterStats.avg_voters_per_station?.toLocaleString() || '0'}
             />
-            <InfoCard 
-              label="Total Stations" 
-              value={voterStats.polling_station_count?.toLocaleString() || '0'} 
+            <InfoCard
+              label="Total Stations"
+              value={voterStats.polling_station_count?.toLocaleString() || '0'}
             />
           </div>
         )}
