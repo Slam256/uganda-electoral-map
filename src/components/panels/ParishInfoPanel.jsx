@@ -4,6 +4,7 @@ import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { CompactVoterStats } from "../shared/CompactVoterStats";
+import { NavigableLink } from "../shared/NavigableLink";
 
 const ParishInfoPanel = ({ data, onCollapse }) => {
   const [showAllStations, setShowAllStations] = useState(false);
@@ -29,16 +30,45 @@ const ParishInfoPanel = ({ data, onCollapse }) => {
         {data.name || voterStats.parish_name}
       </h2>
 
-      {/* Parent Info */}
+      {/* Parent Info - All Navigable */}
       <div className="text-sm text-gray-600 dark:text-gray-400 mb-4 space-y-1">
         {voterStats.subcounty_name && (
-          <p>Subcounty: <span className="font-medium">{voterStats.subcounty_name}</span></p>
+          <p>
+            Subcounty: {' '}
+            <NavigableLink 
+              level="subcounties" 
+              identifier={voterStats.subcounty_name}
+              metadata={{ subcountyId: data.subcounty?.id || voterStats.subcounty_id }}
+            >
+              {voterStats.subcounty_name}
+            </NavigableLink>
+          </p>
         )}
+        
         {voterStats.constituency_name && (
-          <p>Constituency: <span className="font-medium">{voterStats.constituency_name}</span></p>
+          <p>
+            Constituency: {' '}
+            <NavigableLink 
+              level="constituencies" 
+              identifier={voterStats.constituency_name}
+              metadata={{ constituencyId: data.constituency?.id || voterStats.constituency_id }}
+            >
+              {voterStats.constituency_name}
+            </NavigableLink>
+          </p>
         )}
+        
         {voterStats.district_name && (
-          <p>District: <span className="font-medium">{voterStats.district_name}</span></p>
+          <p>
+            District: {' '}
+            <NavigableLink 
+              level="districts" 
+              identifier={voterStats.district_name}
+              metadata={{ districtId: voterStats.district_id }}
+            >
+              {voterStats.district_name}
+            </NavigableLink>
+          </p>
         )}
       </div>
 
@@ -98,14 +128,14 @@ const ParishInfoPanel = ({ data, onCollapse }) => {
           </div>
         )}
 
-        {/* Polling Stations List */}
+        {/* Polling Stations List (Not navigable - terminal level) */}
         {pollingStations.length > 0 && (
           <InfoCard label={`Polling Stations (${pollingStations.length})`}>
             <div className="space-y-2 max-h-96 overflow-y-auto">
               {stationsToShow.map((station, index) => (
                 <div 
                   key={station.id || index}
-                  className="flex items-center justify-between py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600 hover:shadow-sm transition-shadow"
+                  className="flex items-center justify-between py-3 px-3 rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-600"
                 >
                   <div className="flex-1">
                     <p className="text-sm font-medium text-gray-900 dark:text-gray-100">
@@ -181,8 +211,3 @@ const ParishInfoPanel = ({ data, onCollapse }) => {
 };
 
 export default ParishInfoPanel;
-
-/**
- * Parish Badge Style
- */
-export const parishBadgeStyle = 'bg-purple-100 text-purple-800 dark:bg-purple-900 dark:text-purple-200';

@@ -26,10 +26,10 @@ export const VoterStatisticsCard = ({ stats, level = 'district' }) => {
 
   return (
     <div className="space-y-4">
-      {/* 2024 Voter Registration */}
+      {/* 2025 Voter Registration */}
       <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-900/20 dark:to-indigo-900/20 p-4 rounded-lg border border-blue-200 dark:border-blue-800">
         <h3 className="text-sm font-semibold text-blue-900 dark:text-blue-100 mb-3 uppercase tracking-wide">
-          2024 Voter Registration
+          2025 Voter Registration
         </h3>
         
         <div className="grid grid-cols-2 gap-4">

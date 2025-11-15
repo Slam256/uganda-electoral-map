@@ -4,10 +4,11 @@ import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
 import { CompactVoterStats } from "../shared/CompactVoterStats";
+import { NavigableLink, NavigableListItem, DrillDownButton } from "../shared/NavigableLink";
 
 const SubcountyInfoPanel = ({ data, onCollapse }) => {
   const voterStats = data?.voterStats || {};
-
+  
   return (
     <PanelContainer>
       <div className="mb-4 flex items-center gap-3">
@@ -19,10 +20,20 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
         {data.name}
       </h2>
 
-      {/* Parent District Info */}
+      {/* Parent District Info - Navigable */}
       {data.district && (
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
-          District: <span className="font-medium">{data.district.name}</span>
+          District: {' '}
+          <NavigableLink 
+            level="districts" 
+            identifier={data.district.name}
+            metadata={{ 
+              districtId: data.district.id,
+              districtCode: data.district.district_code 
+            }}
+          >
+            {data.district.name}
+          </NavigableLink>
           {data.district.district_code && (
             <span className="ml-2 text-xs font-mono">({data.district.district_code})</span>
           )}
@@ -42,17 +53,31 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
 
         {/* Compact Voter Stats for quick overview */}
         {voterStats.total_voters_2024 && (
-          <CompactVoterStats
+          <CompactVoterStats 
             totalVoters={voterStats.total_voters_2024}
             pollingStations={voterStats.polling_station_count}
             growthRate={voterStats.voter_growth_percentage}
           />
         )}
 
+        {/* Quick Navigation to Parishes */}
+        {voterStats.parish_count > 0 && (
+          <DrillDownButton
+            toLevel="parishes"
+            count={voterStats.parish_count}
+            label="Parishes"
+            identifier={data.id}
+            metadata={{ 
+              subcountyName: data.name,
+              districtName: data.district?.name 
+            }}
+          />
+        )}
+
         {/* Population Data */}
         {data.population && (
-          <InfoCard
-            label="Population (Census)"
+          <InfoCard 
+            label="Population (Census)" 
             value={data.population.toLocaleString()}
             isLarge={true}
           />
@@ -63,29 +88,25 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
           <VoterStatisticsCard stats={voterStats} level="subcounty" />
         )}
 
-        {/* Top Parishes by Voter Count */}
+        {/* Top Parishes by Voter Count - Navigable */}
         {voterStats.top_parishes && voterStats.top_parishes.length > 0 && (
           <InfoCard label="Top Parishes by Voter Registration">
-            <div className="space-y-2">
+            <ul className="space-y-1">
               {voterStats.top_parishes.map((parish, index) => (
-                <div
+                <NavigableListItem
                   key={parish.parish_id}
-                  className="flex items-center justify-between py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-600/50 transition-colors"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 w-6">
-                      {index + 1}.
-                    </span>
-                    <span className="text-sm text-gray-900 dark:text-gray-100">
-                      {parish.parish_name}
-                    </span>
-                  </div>
-                  <span className="text-sm font-semibold text-green-600 dark:text-green-400">
-                    {parish.voters ? parish.voters.toLocaleString() : '0'} voters
-                  </span>
-                </div>
+                  level="parishes"
+                  item={{
+                    id: parish.parish_id,
+                    name: parish.parish_name,
+                    voters: parish.voters
+                  }}
+                  index={index + 1}
+                  showVoters={true}
+                  showCode={false}
+                />
               ))}
-            </div>
+            </ul>
           </InfoCard>
         )}
 
@@ -111,13 +132,13 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
         {/* Statistics Summary */}
         {voterStats.polling_station_count > 0 && (
           <div className="grid grid-cols-2 gap-3">
-            <InfoCard
-              label="Avg Voters/Station"
-              value={voterStats.avg_voters_per_station?.toLocaleString() || '0'}
+            <InfoCard 
+              label="Avg Voters/Station" 
+              value={voterStats.avg_voters_per_station?.toLocaleString() || '0'} 
             />
-            <InfoCard
-              label="Total Stations"
-              value={voterStats.polling_station_count?.toLocaleString() || '0'}
+            <InfoCard 
+              label="Total Stations" 
+              value={voterStats.polling_station_count?.toLocaleString() || '0'} 
             />
           </div>
         )}

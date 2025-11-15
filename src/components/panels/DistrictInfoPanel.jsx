@@ -3,9 +3,11 @@ import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { PanelContainer } from "../shared/PanelContainer";
 import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
+import { NavigableListItem, DrillDownButton } from "../shared/NavigableLink";
+import { useNavigation } from "../../context/NavigationContext";
 
 const DistrictInfoPanel = ({ data, onCollapse }) => {
-  // Extract voter statistics if available
+  const { navigateTo } = useNavigation();
   const voterStats = data?.voterStats || {};
   
   return (
@@ -53,63 +55,71 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
           <VoterStatisticsCard stats={voterStats} level="district" />
         )}
 
-        {/* Legacy 2021 Data (if no voter stats available) */}
-        {!voterStats?.total_voters_2024 && data.registered_voters_2021 && (
-          <InfoCard 
-            label="Registered Voters (2021)" 
-            value={data.registered_voters_2021.toLocaleString()}
-            isLarge={true}
-          />
-        )}
+        {/* Quick Navigation Buttons */}
+        <div className="grid grid-cols-2 gap-3">
+          {voterStats.constituency_count > 0 && (
+            <DrillDownButton
+              toLevel="constituencies"
+              count={voterStats.constituency_count}
+              label="Constituencies"
+              identifier={data.id}
+              metadata={{ districtName: data.name }}
+            />
+          )}
+          
+          {voterStats.subcounty_count > 0 && (
+            <DrillDownButton
+              toLevel="subcounties"
+              count={voterStats.subcounty_count}
+              label="Subcounties"
+              identifier={data.id}
+              metadata={{ districtName: data.name }}
+            />
+          )}
+        </div>
 
-        {/* Constituencies List */}
+        {/* Navigable Constituencies List */}
         {data.constituencies && data.constituencies.length > 0 && (
           <InfoCard label={`Constituencies (${data.constituencies.length})`}>
-            <div className="max-h-48 overflow-y-auto">
-              <ul className="space-y-2">
+            <div className="max-h-64 overflow-y-auto">
+              <ul className="space-y-1">
                 {data.constituencies.map((constituency) => (
-                  <li 
-                    key={constituency.id} 
-                    className="flex items-center justify-between py-1 px-2 rounded hover:bg-gray-100 dark:hover:bg-gray-600 transition-colors"
-                  >
-                    <span className="text-gray-900 dark:text-gray-100">
-                      {constituency.name}
-                    </span>
-                    {constituency.constituency_code && (
-                      <span className="text-xs text-gray-500 dark:text-gray-400 font-mono">
-                        {constituency.constituency_code}
-                      </span>
-                    )}
-                  </li>
+                  <NavigableListItem
+                    key={constituency.id}
+                    level="constituencies"
+                    item={{
+                      id: constituency.id,
+                      name: constituency.name,
+                      code: constituency.constituency_code
+                    }}
+                    showCode={true}
+                  />
                 ))}
               </ul>
             </div>
           </InfoCard>
         )}
 
-        {/* Top Constituencies by Voters (from voter stats) */}
+        {/* Top Constituencies by Voters (navigable) */}
         {voterStats?.top_constituencies && voterStats.top_constituencies.length > 0 && (
           <InfoCard label="Top Constituencies by Voter Registration">
-            <div className="space-y-2">
+            <ul className="space-y-1">
               {voterStats.top_constituencies.map((const_data, index) => (
-                <div 
+                <NavigableListItem
                   key={const_data.constituency_id}
-                  className="flex items-center justify-between py-2 px-2 rounded hover:bg-gray-50 dark:hover:bg-gray-600/50"
-                >
-                  <div className="flex items-center gap-2">
-                    <span className="text-xs font-bold text-gray-500 dark:text-gray-400 w-6">
-                      {index + 1}.
-                    </span>
-                    <span className="text-sm text-gray-900 dark:text-gray-100">
-                      {const_data.constituency_name}
-                    </span>
-                  </div>
-                  <span className="text-sm font-semibold text-blue-600 dark:text-blue-400">
-                    {const_data.voters.toLocaleString()} voters
-                  </span>
-                </div>
+                  level="constituencies"
+                  item={{
+                    id: const_data.constituency_id,
+                    name: const_data.constituency_name,
+                    code: const_data.constituency_code,
+                    voters: const_data.voters
+                  }}
+                  index={index + 1}
+                  showVoters={true}
+                  showCode={false}
+                />
               ))}
-            </div>
+            </ul>
           </InfoCard>
         )}
 
