@@ -71,3 +71,6 @@ supabase
 # Build outputs
 /dist
 /build
+
+# Data
+data/

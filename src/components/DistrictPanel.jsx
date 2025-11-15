@@ -7,16 +7,18 @@ import LoadingPanel from "./panels/LoadingPanel";
 import ErrorPanel from "./panels/ErrorPanel";
 import DistrictInfoPanel from "./panels/DistrictInfoPanel";
 import SubcountyInfoPanel from "./panels/SubcountyInfoPanel";
+import ParishInfoPanel from "./panels/ParishInfoPanel";
+import ConstituencyInfoPanel from "./panels/ConstituencyInfoPanel";
 
 const DistrictPanel = ({ selectedFeature }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
-  // Only fetch admin data for districts/subcounties, NOT for campaign stops
+  // Only fetch admin data for geographic features, NOT for campaign stops
   const shouldFetchAdminData = 
     selectedFeature?.layerType && 
     selectedFeature.layerType !== 'campaign-stop';
 
-  const { data: dbData, loading, error } = useAdminData(
+  const { data: dbData, voterStats, loading, error } = useAdminData(
     shouldFetchAdminData ? selectedFeature?.layerType : null,
     shouldFetchAdminData ? selectedFeature?.identifier : null,
     selectedFeature?.identifierType || 'name'
@@ -70,23 +72,52 @@ const DistrictPanel = ({ selectedFeature }) => {
 
   // Render based on layer type
   const renderPanel = () => {
+    // Merge voter stats into the data object for panels
+    const dataWithStats = {
+      ...dbData,
+      voterStats: voterStats
+    };
+
     switch (selectedFeature.layerType) {
       case 'districts':
         return (
           <DistrictInfoPanel 
-            data={dbData}
+            data={dataWithStats}
             onCollapse={() => setIsExpanded(false)}
           />
         );
+      
       case 'subcounties':
         return (
           <SubcountyInfoPanel 
-            data={dbData}
+            data={dataWithStats}
             onCollapse={() => setIsExpanded(false)}
           />
         );
+      
+      case 'parishes':
+        return (
+          <ParishInfoPanel 
+            data={dataWithStats}
+            onCollapse={() => setIsExpanded(false)}
+          />
+        );
+      
+      case 'constituencies':
+        return (
+          <ConstituencyInfoPanel 
+            data={dataWithStats}
+            onCollapse={() => setIsExpanded(false)}
+          />
+        );
+      
       default:
-        return null;
+        return (
+          <ErrorPanel 
+            error={`Unknown layer type: ${selectedFeature.layerType}`}
+            onCollapse={() => setIsExpanded(false)} 
+          />
+        );
     }
   };
 
