@@ -1,6 +1,7 @@
 import { ChevronDown } from "lucide-react";
 import Avatar from "../shared/Avatar";
 import { getCandidatePhoto } from "../../utils/candidatePhotos";
+import EmptyPanel from "./EmptyPanel";
 
 const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
   // Handle campaign stops with special UI
@@ -57,31 +58,21 @@ const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
   }
 
   // Default collapsed state for other feature types
-  const getDisplayText = () => {
-    if (!selectedFeature) {
-      return 'Click map to view info';
-    }
-    
-    return dbData?.name || 'Loading...';
-  };
+  if (!selectedFeature) {
+    // Use EmptyPanel for default state
+    return <EmptyPanel />;
+  }
 
-  const getIcon = () => {
-    if (!selectedFeature) return '📍';
-    if (selectedFeature.layerType === 'districts') return '📍';
-    if (selectedFeature.layerType === 'subcounties') return '📍';
-    return '📍';
-  };
-
+  // Otherwise, show collapsed button for selected feature
   return (
     <button
       onClick={onExpand}
       className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-4 py-3 hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
     >
       <div className="flex items-center gap-2">
-        <span className="text-lg">{getIcon()}</span>
-        
+        <span className="text-lg">📍</span>
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-[200px]">
-          {getDisplayText()}
+          {dbData?.name || 'Loading...'}
         </span>
         <ChevronDown className="w-5 h-5 text-gray-400" />
       </div>
