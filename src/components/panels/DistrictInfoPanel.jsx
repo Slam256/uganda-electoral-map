@@ -6,6 +6,7 @@ import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
 import { useNavigation } from "../../context/NavigationContext";
 import { BadgeInfo, Vote, LandPlot } from "lucide-react";
 import { useState } from "react";
+import { motion, AnimatePresence } from 'framer-motion';
 
 const TABS = [
   { key: 'about', label: 'About', icon: BadgeInfo },
@@ -20,7 +21,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
 
   // Tab content renderers
   const renderAbout = () => (
-    <div className="space-y-2">
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
       {/* Header Row: Name, region, badge */}
       <div className="flex items-start justify-between mb-2">
         <div>
@@ -55,11 +56,13 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
           <span className="text-base text-gray-500 dark:text-gray-300">{data.area_km2 ? `${data.area_km2.toLocaleString()} km²` : '-'}</span>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 
   const renderVoter = () => (
-    <VoterStatisticsCard stats={voterStats} />
+    <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
+      <VoterStatisticsCard stats={voterStats} />
+    </motion.div>
   );
 
   const renderAdmin = () => {
@@ -69,7 +72,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
     const constituencies = data.constituencies && data.constituencies.length > 0 ? data.constituencies : [];
 
     return (
-      <div className="space-y-2">
+      <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
         {/* Top rows: Constituencies, Sub counties, Parishes */}
         <div className="divide-y divide-gray-100 dark:divide-gray-800 bg-white dark:bg-gray-800 rounded-lg">
           <div className="flex items-center justify-between py-3">
@@ -89,7 +92,10 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
         {/* Constituencies list */}
         {constituencies.length > 0 && (
           <div className="mt-4">
-            <div className="text-base font-semibold text-gray-900 dark:text-white mb-2">Constituencies</div>
+            <div className="flex justify-between text-base font-semibold text-gray-900 dark:text-white mb-2">
+              <span>Constituencies</span>
+              <span>Code</span>
+            </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg divide-y divide-gray-100 dark:divide-gray-800">
               {constituencies.map((constituency) => (
                 <div key={constituency.id} className="flex items-center justify-between py-3">
@@ -100,7 +106,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
             </div>
           </div>
         )}
-      </div>
+      </motion.div>
     );
   };
 
@@ -136,7 +142,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
             <Icon className="w-5 h-5 mb-1" />
             <span className="text-xs">{label}</span>
             {activeTab === key && (
-              <span className="absolute left-0 right-0 -bottom-1 h-0.5 bg-blue-500 rounded-full" />
+              <motion.span layoutId="tab-underline" className="absolute left-0 right-0 -bottom-1 h-0.5 bg-blue-500 rounded-full" />
             )}
           </button>
         ))}
@@ -144,7 +150,9 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
         <CollapseButton onClick={onCollapse} />
       </div>
       {/* Tab Content */}
-      <div>{renderTabContent()}</div>
+      <AnimatePresence mode="wait">
+        {renderTabContent()}
+      </AnimatePresence>
     </PanelContainer>
   );
 };
