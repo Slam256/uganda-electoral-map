@@ -3,16 +3,14 @@ import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { PanelContainer } from "../shared/PanelContainer";
 import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
-import { NavigableListItem, DrillDownButton } from "../shared/NavigableLink";
 import { useNavigation } from "../../context/NavigationContext";
-import { BadgeInfo, Vote, LandPlot, Search } from "lucide-react";
+import { BadgeInfo, Vote, LandPlot } from "lucide-react";
 import { useState } from "react";
 
 const TABS = [
   { key: 'about', label: 'About', icon: BadgeInfo },
   { key: 'voter', label: 'Voter data', icon: Vote },
   { key: 'admin', label: 'Admin', icon: LandPlot },
-  { key: 'search', label: 'Search', icon: Search },
 ];
 
 const DistrictInfoPanel = ({ data, onCollapse }) => {
@@ -106,20 +104,6 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
     );
   };
 
-  const renderSearch = () => (
-    <div className="space-y-4">
-      <div className="rounded-lg bg-gray-100 dark:bg-gray-700 p-4 flex items-center gap-2">
-        <Search className="w-5 h-5 text-gray-400" />
-        <input
-          type="text"
-          placeholder="Type at least 2 characters to search"
-          className="bg-transparent outline-none flex-1 text-gray-800 dark:text-gray-100"
-          disabled
-        />
-      </div>
-      <div className="text-gray-400 text-sm">Search functionality coming soon.</div>
-    </div>
-  );
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -129,8 +113,6 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
         return renderVoter();
       case 'admin':
         return renderAdmin();
-      case 'search':
-        return renderSearch();
       default:
         return null;
     }
