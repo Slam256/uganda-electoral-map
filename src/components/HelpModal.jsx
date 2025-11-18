@@ -17,7 +17,6 @@ const HelpModal = ({ isOpen, onClose }) => {
               </div>
               <div>
                 <h2 className="text-2xl font-bold">Uganda's Electoral Boundaries & Campaign Tracking Map</h2>
-                <p className="text-sm text-white/90">Welcome to the interactive Map.</p>
               </div>
             </div>
             <button

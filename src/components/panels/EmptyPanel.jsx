@@ -2,7 +2,6 @@ import { PanelContainer } from "../shared/PanelContainer";
 import { Lightbulb } from "lucide-react";
 
 const EmptyPanel = () => (
-  // Render the tip as the panel itself: remove header and panel padding
   <PanelContainer noPadding>
     <div className="flex items-start gap-3 p-4">
       <div className="flex-shrink-0">
