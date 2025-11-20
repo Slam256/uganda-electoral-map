@@ -66,28 +66,6 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
           <VoterStatisticsCard stats={voterStats} level="subcounty" />
         )}
 
-        {/* Top Parishes by Voter Count - Navigable */}
-        {voterStats.top_parishes && voterStats.top_parishes.length > 0 && (
-          <InfoCard label="Top Parishes by Voter Registration">
-            <ul className="space-y-1">
-              {voterStats.top_parishes.map((parish, index) => (
-                <NavigableListItem
-                  key={parish.parish_id}
-                  level="parishes"
-                  item={{
-                    id: parish.parish_id,
-                    name: parish.parish_name,
-                    voters: parish.voters
-                  }}
-                  index={index + 1}
-                  showVoters={true}
-                  showCode={false}
-                />
-              ))}
-            </ul>
-          </InfoCard>
-        )}
-
         {/* Voter Registration Rate */}
         {voterStats.voter_registration_rate && (
           <div className="bg-yellow-50 dark:bg-yellow-900/20 p-4 rounded-lg border border-yellow-200 dark:border-yellow-800">

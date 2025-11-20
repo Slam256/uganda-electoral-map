@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useRef, useEffect, useState, useImperativeHandle, forwardRef } from 'react';
 import Map from 'ol/Map';
 import View from 'ol/View';
@@ -117,7 +118,7 @@ const MapComponent = forwardRef(({ onFeatureSelect, routes }, ref) => {
 
     const overlayGroup = new LayerGroup({
       title: 'Administrative Boundaries',
-      layers: [districtLayer, subcountyLayer]
+      layers: [districtLayer ]
     });
     const map = new Map({
       target: mapContainerRef.current,
