@@ -28,7 +28,12 @@ export const MapContainer = ({ children }) => {
  */
 export const BottomPanel = ({ children }) => {
   return (
-    <div className="absolute bottom-6 left-4 z-[1000] max-h-[80vh] overflow-y-auto">
+    <div
+      className="absolute left-4 z-[1000] max-h-[75vh] sm:max-h-[80vh] overflow-y-auto"
+      style={{
+        bottom: 'max(1.5rem, calc(1rem + env(safe-area-inset-bottom, 0px)))'
+      }}
+    >
       {children}
     </div>
   );
