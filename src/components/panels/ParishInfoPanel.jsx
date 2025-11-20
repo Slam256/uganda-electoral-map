@@ -4,7 +4,6 @@ import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { CompactVoterStats } from "../shared/CompactVoterStats";
-import { NavigableLink } from "../shared/NavigableLink";
 
 const ParishInfoPanel = ({ data, onCollapse }) => {
   const [showAllStations, setShowAllStations] = useState(false);
@@ -35,39 +34,18 @@ const ParishInfoPanel = ({ data, onCollapse }) => {
         {voterStats.subcounty_name && (
           <p>
             Subcounty: {' '}
-            <NavigableLink 
-              level="subcounties" 
-              identifier={voterStats.subcounty_name}
-              metadata={{ subcountyId: data.subcounty?.id || voterStats.subcounty_id }}
-            >
-              {voterStats.subcounty_name}
-            </NavigableLink>
           </p>
         )}
         
         {voterStats.constituency_name && (
           <p>
             Constituency: {' '}
-            <NavigableLink 
-              level="constituencies" 
-              identifier={voterStats.constituency_name}
-              metadata={{ constituencyId: data.constituency?.id || voterStats.constituency_id }}
-            >
-              {voterStats.constituency_name}
-            </NavigableLink>
           </p>
         )}
         
         {voterStats.district_name && (
           <p>
             District: {' '}
-            <NavigableLink 
-              level="districts" 
-              identifier={voterStats.district_name}
-              metadata={{ districtId: voterStats.district_id }}
-            >
-              {voterStats.district_name}
-            </NavigableLink>
           </p>
         )}
       </div>

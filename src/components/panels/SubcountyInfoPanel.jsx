@@ -4,7 +4,6 @@ import { CollapseButton } from "../shared/CollapseButton";
 import { InfoCard } from "../shared/InfoCard";
 import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
 import { CompactVoterStats } from "../shared/CompactVoterStats";
-import { NavigableLink, NavigableListItem, DrillDownButton } from "../shared/NavigableLink";
 
 const SubcountyInfoPanel = ({ data, onCollapse }) => {
   const voterStats = data?.voterStats || {};
@@ -24,16 +23,6 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
       {data.district && (
         <p className="text-sm text-gray-600 dark:text-gray-400 mb-4">
           District: {' '}
-          <NavigableLink 
-            level="districts" 
-            identifier={data.district.name}
-            metadata={{ 
-              districtId: data.district.id,
-              districtCode: data.district.district_code 
-            }}
-          >
-            {data.district.name}
-          </NavigableLink>
           {data.district.district_code && (
             <span className="ml-2 text-xs font-mono">({data.district.district_code})</span>
           )}
@@ -61,18 +50,7 @@ const SubcountyInfoPanel = ({ data, onCollapse }) => {
         )}
 
         {/* Quick Navigation to Parishes */}
-        {voterStats.parish_count > 0 && (
-          <DrillDownButton
-            toLevel="parishes"
-            count={voterStats.parish_count}
-            label="Parishes"
-            identifier={data.id}
-            metadata={{ 
-              subcountyName: data.name,
-              districtName: data.district?.name 
-            }}
-          />
-        )}
+        
 
         {/* Population Data */}
         {data.population && (

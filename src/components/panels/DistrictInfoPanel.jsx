@@ -1,9 +1,7 @@
 import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
-import { InfoCard } from "../shared/InfoCard";
 import { PanelContainer } from "../shared/PanelContainer";
 import { VoterStatisticsCard } from "../shared/VoterStatisticsCard";
-import { useNavigation } from "../../context/NavigationContext";
 import { BadgeInfo, Vote, LandPlot } from "lucide-react";
 import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
@@ -15,7 +13,6 @@ const TABS = [
 ];
 
 const DistrictInfoPanel = ({ data, onCollapse }) => {
-  const { navigateTo } = useNavigation();
   const voterStats = data?.voterStats || {};
   const [activeTab, setActiveTab] = useState('about');
 
