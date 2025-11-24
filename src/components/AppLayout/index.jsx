@@ -28,7 +28,7 @@ export const MapContainer = ({ children }) => {
  */
 export const BottomPanel = ({ children }) => {
   return (
-    <div className="absolute bottom-13 sm:bottom-4 left-4 z-[1000] max-h-[70vh] sm:max-h-[80vh] overflow-y-auto pb-8 sm:pb-0">
+    <div className="absolute bottom-13 sm:bottom-4 left-4 right-4 sm:right-auto z-[1000] max-h-[70vh] sm:max-h-[80vh] pb-8 sm:pb-0 sm:w-[400px]">
       {children}
     </div>
   );

@@ -75,7 +75,7 @@ export const useMPAspirants = (districtId, options = {}) => {
           .eq('status', status);
 
         if (dwmpError) throw dwmpError;
-        
+
         // Add a marker for UI - these are district-wide
         districtWomanMPs = (dwmpData || []).map(mp => ({
           ...mp,
@@ -106,10 +106,6 @@ export const useMPAspirants = (districtId, options = {}) => {
                 name,
                 abbreviation,
                 color
-              ),
-              constituency:constituencies (
-                id,
-                name
               )
             `)
             .in('constituency_id', constituencyIds)
@@ -118,19 +114,23 @@ export const useMPAspirants = (districtId, options = {}) => {
             .eq('status', status);
 
           if (dempError) throw dempError;
-          
+
           // Add area info for UI consistency
-          directlyElectedMPs = (dempData || []).map(mp => ({
-            ...mp,
-            areaName: mp.constituency?.name,
-            areaType: 'constituency'
-          }));
+          directlyElectedMPs = (dempData || []).map(mp => {
+            const constituency = districtConstituencies.find(c => c.id === mp.constituency_id);
+            return {
+              ...mp,
+              constituency: constituency ? { id: constituency.id, name: constituency.name } : null,
+              areaName: constituency?.name,
+              areaType: 'constituency'
+            };
+          });
         }
       }
 
       // Combine and sort results
       const allAspirants = [...districtWomanMPs, ...directlyElectedMPs];
-      
+
       // Sort by category first (DWMP first), then by constituency, then by name
       allAspirants.sort((a, b) => {
         // DWMP comes first
@@ -192,12 +192,12 @@ export const useMPAspirants = (districtId, options = {}) => {
     return grouped;
   }, [aspirants]);
 
-  return { 
+  return {
     aspirants,
     constituencies,  // List of constituencies in this district (for filter dropdown)
     aspirantsByConstituency,  // Pre-grouped for easy rendering
-    loading, 
-    error, 
+    loading,
+    error,
     refetch: fetchAspirants,
     filterByConstituency  // Helper function
   };
@@ -244,10 +244,6 @@ export const useMPAspirantsByConstituency = (constituencyId, options = {}) => {
             name,
             abbreviation,
             color
-          ),
-          constituency:constituencies (
-            id,
-            name
           )
         `)
         .eq('constituency_id', constituencyId)
@@ -256,8 +252,24 @@ export const useMPAspirantsByConstituency = (constituencyId, options = {}) => {
         .order('full_name');
 
       if (queryError) throw queryError;
-      
-      setAspirants(data || []);
+
+      // Fetch constituency details separately since relation might be missing
+      let constituencyData = null;
+      if (constituencyId) {
+        const { data: cData } = await supabase
+          .from('constituencies')
+          .select('id, name')
+          .eq('id', constituencyId)
+          .single();
+        constituencyData = cData;
+      }
+
+      const aspirantsWithConstituency = (data || []).map(mp => ({
+        ...mp,
+        constituency: constituencyData
+      }));
+
+      setAspirants(aspirantsWithConstituency);
 
     } catch (err) {
       console.error('Error fetching MP aspirants by constituency:', err);
@@ -272,10 +284,10 @@ export const useMPAspirantsByConstituency = (constituencyId, options = {}) => {
     fetchAspirants();
   }, [constituencyId, electionYear, status]);
 
-  return { 
-    aspirants, 
-    loading, 
-    error, 
-    refetch: fetchAspirants 
+  return {
+    aspirants,
+    loading,
+    error,
+    refetch: fetchAspirants
   };
 };
