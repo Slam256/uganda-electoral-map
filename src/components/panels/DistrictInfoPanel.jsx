@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Badge } from "../shared/Badge";
 import { CollapseButton } from "../shared/CollapseButton";
 import { PanelContainer } from "../shared/PanelContainer";
