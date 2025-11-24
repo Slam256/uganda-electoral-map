@@ -10,3 +10,26 @@ const { aspirants } = useMPAspirants(districtId, { category: 'DEMP' });
 
 
 import { useMPAspirants } from '../hooks/useMPAspirants';
+
+Returned object. 
+{
+  id: "uuid",
+  full_name: "Betty Nambooze",
+  category: "DEMP",           // or "DWmP"
+  election_year: 2026,
+  status: "candidate",
+  party: {
+    id: "uuid",
+    name: "National Unity Platform",
+    abbreviation: "NUP",
+    color: "#FF0000"
+  },
+  constituency: {             // For DEMP
+    id: "uuid",
+    name: "Mukono Municipality"
+  },
+  district: {                 // For DWmP
+    id: "uuid",
+    name: "Mukono"
+  }
+}
