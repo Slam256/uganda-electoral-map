@@ -28,7 +28,7 @@ Returned object.
     id: "uuid",
     name: "Mukono Municipality"
   },
-  district: {                 // For DWmP
+  district: {                 // For DWWP
     id: "uuid",
     name: "Mukono"
   }
