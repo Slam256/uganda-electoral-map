@@ -72,7 +72,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
     const subcountyCount = voterStats.subcounty_count ?? '-';
     const parishCount = voterStats.parish_count ?? '-';
     const constituenciesData = data.constituencies && data.constituencies.length > 0 ? data.constituencies : [];
-    const candidatesCount = aspirants.length > 0 ? aspirants.length : '0';
+    const candidatesCount = aspirants.length > 0 ? aspirants.length : '❗';
 
     if (adminView === 'aspirants') {
       return (

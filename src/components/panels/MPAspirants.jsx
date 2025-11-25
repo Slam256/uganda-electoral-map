@@ -85,7 +85,7 @@ const MPAspirants = ({ aspirants, constituencies, onBack }) => {
         <div className="flex-1 overflow-y-auto min-h-0 -mx-4 md:-mx-6 px-4 md:px-6">
           {filteredAspirants.length > 0 ? (
             filteredAspirants.map(aspirant => (
-              <div key={aspirant.id} className="flex items-center p-2 mb-2 bg-transparent">
+              <div key={aspirant.id} className="flex items-start p-2 mb-2 bg-transparent">
                 <Avatar
                   icon={User}
                   fallbackColor={aspirant.party?.color || '#e5e7eb'}
@@ -95,6 +95,12 @@ const MPAspirants = ({ aspirants, constituencies, onBack }) => {
                   <div className="font-semibold text-gray-900 dark:text-white">{aspirant.full_name}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">{aspirant.party?.abbreviation || 'Independent'}</div>
                   <div className="text-sm text-gray-500 dark:text-gray-400">{aspirant.areaName}</div>
+                  {aspirant.category === 'DWMP' && (
+                    <div className="text-sm text-gray-500 dark:text-gray-400">District Woman Mp</div>
+                  )}
+                  {aspirant.category === 'DEMP' && (
+                    <div className="text-sm text-gray-500 dark:text-gray-400">Directly Elected MP</div>
+                  )}
                 </div>
               </div>
             ))
