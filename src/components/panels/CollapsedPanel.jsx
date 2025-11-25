@@ -1,4 +1,5 @@
-import { ChevronDown } from "lucide-react";
+import { ChevronUp, MapPin } from "lucide-react";
+import { motion } from "framer-motion";
 import Avatar from "../shared/Avatar";
 import { getCandidatePhoto } from "../../utils/candidatePhotos";
 import EmptyPanel from "./EmptyPanel";
@@ -16,9 +17,17 @@ const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
     } = selectedFeature;
 
     return (
-      <button
+      <motion.button
         onClick={onExpand}
-        className="w-full bg-white dark:bg-gray-800 rounded-lg shadow-lg px-4 py-3 hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
+        layoutId="campaign-panel"
+        className="w-full bg-white dark:bg-gray-800 rounded-[16px] shadow-lg px-4 py-3 hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        exit={{ opacity: 0 }}
+        transition={{
+          layout: { type: "spring", stiffness: 300, damping: 30 },
+          opacity: { duration: 0.2 }
+        }}
       >
         <div className="flex items-center gap-3">
           {/* Avatar with party color dot */}
@@ -29,7 +38,7 @@ const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
             statusColor={candidateColor}
             size="md"
           />
-          
+
           {/* Candidate Info */}
           <div className="flex-1 min-w-0 text-left">
             <div className="text-sm font-semibold text-gray-900 dark:text-gray-100 truncate">
@@ -49,34 +58,38 @@ const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
               </div>
             )}
           </div>
-          
-          {/* Chevron Down Icon */}
-          <ChevronDown className="w-5 h-5 text-gray-400 flex-shrink-0" />
+
+          {/* Chevron Up Icon */}
+          <ChevronUp className="w-5 h-5 text-gray-400 flex-shrink-0" />
         </div>
-      </button>
+      </motion.button>
     );
   }
 
-  // Default collapsed state for other feature types
   if (!selectedFeature) {
-    // Use EmptyPanel for default state
     return <EmptyPanel />;
   }
-
-  // Otherwise, show collapsed button for selected feature
   return (
-    <button
+    <motion.button
       onClick={onExpand}
-      className="bg-white dark:bg-gray-800 rounded-lg shadow-lg px-4 py-3 hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
+      layoutId="district-panel"
+      className="bg-white dark:bg-gray-800 rounded-[12px] shadow-lg px-4 py-3 hover:shadow-xl transition-shadow border border-gray-200 dark:border-gray-700"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      transition={{
+        layout: { type: "spring", stiffness: 300, damping: 30 },
+        opacity: { duration: 0.2 }
+      }}
     >
       <div className="flex items-center gap-2">
-        <span className="text-lg">📍</span>
+        <MapPin className="w-5 h-5 text-gray-500 dark:text-gray-400" />
         <span className="text-sm font-medium text-gray-700 dark:text-gray-300 truncate max-w-[200px]">
           {dbData?.name || 'Loading...'}
         </span>
-        <ChevronDown className="w-5 h-5 text-gray-400" />
+        <ChevronUp className="w-5 h-5 text-gray-400" />
       </div>
-    </button>
+    </motion.button>
   );
 };
 
