@@ -82,7 +82,7 @@ const MPAspirants = ({ aspirants, constituencies, onBack }) => {
           </Popover>
         </div>
 
-        <div className="flex-1 overflow-y-auto min-h-0 -mx-4 md:-mx-6 px-4 md:px-6">
+        <div className="overflow-y-auto h-[500px] md:h-[350px] -mx-4 md:-mx-6 px-4 md:px-6">
           {filteredAspirants.length > 0 ? (
             filteredAspirants.map(aspirant => (
               <div key={aspirant.id} className="flex items-start p-2 mb-2 bg-transparent">
