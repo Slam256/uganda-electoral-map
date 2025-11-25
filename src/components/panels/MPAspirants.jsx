@@ -41,7 +41,7 @@ const MPAspirants = ({ aspirants, constituencies, onBack }) => {
       animate={{ opacity: 1, x: 0 }}
       exit={{ opacity: 0, x: 10 }}
     >
-      <div className="flex flex-col max-h-[600px] overflow-hidden">
+      <div className="flex flex-col h-[40vh] md:h-[350px]">
         <div className="flex items-center justify-between mb-4 flex-shrink-0 pt-2 pb-2 -mx-4 md:-mx-6 px-4 md:px-6 bg-white dark:bg-gray-900">
           <button onClick={onBack} className="p-2 rounded-full hover:bg-gray-100 dark:hover:bg-gray-700">
             <ChevronLeft className="w-6 h-6" />
@@ -82,7 +82,7 @@ const MPAspirants = ({ aspirants, constituencies, onBack }) => {
           </Popover>
         </div>
 
-        <div className="overflow-y-auto h-[500px] md:h-[350px] -mx-4 md:-mx-6 px-4 md:px-6">
+        <div className="flex-1 overflow-y-auto min-h-0 -mx-4 md:-mx-6 px-4 md:px-6">
           {filteredAspirants.length > 0 ? (
             filteredAspirants.map(aspirant => (
               <div key={aspirant.id} className="flex items-start p-2 mb-2 bg-transparent">
