@@ -8,6 +8,7 @@ import { useState } from "react";
 import { motion, AnimatePresence } from 'framer-motion';
 import { useMPAspirants } from "../../hooks/useMPAspirantsData";
 import MPAspirants from "./MPAspirants";
+import ConstituencyStats from "./ConstituencyStats";
 
 const TABS = [
   { key: 'about', label: 'About', icon: BadgeInfo },
@@ -84,14 +85,29 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
       );
     }
 
+    if (adminView === 'constituencies') {
+      return (
+        <ConstituencyStats
+          districtId={data.id}
+          onBack={() => setAdminView('main')}
+        />
+      );
+    }
+
     return (
       <motion.div initial={{ opacity: 0, x: -10 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 10 }}>
         {/* Top rows: Constituencies, Sub counties, Parishes */}
         <div className="divide-y divide-gray-100 dark:divide-gray-800 bg-white dark:bg-gray-800 rounded-lg">
-          <div className="flex items-center justify-between py-3">
-            <span className="text-base text-gray-900 dark:text-white">Constituencies</span>
-            <span className="text-base text-gray-500 dark:text-gray-300">{constituencyCount}</span>
+          <div
+          className="flex items-center justify-between py-3 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-700"
+          onClick={() => setAdminView('constituencies')}
+        >
+          <span className="text-base text-gray-900 dark:text-white">Constituencies</span>
+          <div className="flex items-center">
+            <span className="text-base text-gray-500 dark:text-gray-300 mr-2">{constituencyCount}</span>
+            <ChevronRight className="w-5 h-5 text-gray-400" />
           </div>
+        </div>
           <div className="flex items-center justify-between py-3">
             <span className="text-base text-gray-900 dark:text-white">Sub counties</span>
             <span className="text-base text-gray-500 dark:text-gray-300">{subcountyCount}</span>
@@ -112,12 +128,12 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
           </div>
         </div>
 
-        {/* Constituencies list */}
+        {/* Constituencies list
         {constituenciesData.length > 0 && (
           <div className="mt-4">
             <div className="flex justify-between text-base font-semibold text-gray-900 dark:text-white mb-2">
               <span>Constituencies</span>
-              <span>Code</span>
+              <span>Polling stations</span>
             </div>
             <div className="bg-white dark:bg-gray-800 rounded-lg divide-y divide-gray-100 dark:divide-gray-800">
               {constituenciesData.map((constituency) => (
@@ -128,7 +144,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
               ))}
             </div>
           </div>
-        )}
+        )} */}
       </motion.div>
     );
   };
@@ -159,7 +175,7 @@ const DistrictInfoPanel = ({ data, onCollapse }) => {
       }}
     >
       <PanelContainer
-        className="rounded-[12px] flex flex-col overflow-hidden h-[45vh] md:h-[400px]"
+        className="rounded-[12px] flex flex-col overflow-hidden md:h-[400px] max-h-[50vh]"
         scrollable={false}
         noPadding={true}
       >
