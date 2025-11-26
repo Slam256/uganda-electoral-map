@@ -6,13 +6,15 @@ import { useState } from 'react';
  * - Supports custom fallback colors
  */
 
-const Avatar = ({ 
-  src, 
-  alt, 
-  fallbackColor, 
+const Avatar = ({
+  src,
+  alt,
+  fallbackColor,
   size = 'md',
   className = '',
-  statusColor 
+  statusColor,
+  icon,
+  fallback
 }) => {
   const [imageError, setImageError] = useState(false);
 
@@ -38,31 +40,39 @@ const Avatar = ({
   // Show fallback only if no src or image failed to load
   const showFallback = !src || imageError;
 
+  const Icon = icon;
+
   return (
     <div className="relative inline-block">
-      <div 
+      <div
         className={`${sizeClass} rounded-full flex-shrink-0 border-2 border-white dark:border-gray-800 shadow-sm overflow-hidden relative ${className}`}
       >
-        {src && !imageError && (
+        {src && !imageError ? (
           <img
             src={src}
             alt={alt || ''}
             onError={() => setImageError(true)}
             className="w-full h-full object-cover"
           />
-        )}
-        
-        {showFallback && fallbackColor && (
-          <div 
-            className="w-full h-full absolute inset-0"
-            style={{ backgroundColor: fallbackColor }}
-          />
+        ) : (
+          <div
+            className="w-full h-full absolute inset-0 flex items-center justify-center"
+            style={{ backgroundColor: fallbackColor || '#e5e7eb' }}
+          >
+            {Icon ? (
+              <Icon className="w-3/5 h-3/5 text-white" />
+            ) : (
+              <span className="text-gray-500 font-medium text-sm">
+                {fallback || (alt ? alt.charAt(0).toUpperCase() : '?')}
+              </span>
+            )}
+          </div>
         )}
       </div>
-      
+
       {/* Party color dot at bottom-right */}
       {statusColor && (
-        <div 
+        <div
           className={`${statusDotClass} absolute bottom-0 right-0 rounded-full border-white dark:border-gray-800 shadow-sm`}
           style={{ backgroundColor: statusColor }}
         />

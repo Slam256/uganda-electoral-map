@@ -3,7 +3,7 @@ import { Lightbulb } from "lucide-react";
 
 const EmptyPanel = () => (
   <PanelContainer noPadding>
-    <div className="flex items-start gap-3 p-4">
+    <div className="flex items-center gap-3 p-4">
       <div className="flex-shrink-0">
         <div className="h-10 w-10 rounded-full bg-yellow-400 flex items-center justify-center">
           <Lightbulb className="text-white" size={18} />
