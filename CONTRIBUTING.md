@@ -13,6 +13,16 @@ We welcome contributions from developers, designers, data analysts, and civic te
    - Help collect/verify campaign schedule data
    - Improve electoral boundary accuracy
    - Add missing constituency information
+   - Add nominated Candidate information.
+   Structure: {
+  "name": "MP Aspirant",
+  "area": "Wakiso",
+  "area_type": "district",
+  "category": "DWMP",
+  "party": "DP",
+  "election_year": 2026,
+  "status": "candidate"
+}
 
 3. **Design Contributions**
    - Improve UI/UX
