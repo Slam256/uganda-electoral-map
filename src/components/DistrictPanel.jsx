@@ -9,18 +9,21 @@ import DistrictInfoPanel from "./panels/DistrictInfoPanel";
 import SubcountyInfoPanel from "./panels/SubcountyInfoPanel";
 import ParishInfoPanel from "./panels/ParishInfoPanel";
 import ConstituencyInfoPanel from "./panels/ConstituencyInfoPanel";
+import CountryInfoPanel from "./panels/CountryInfoPanel";
 
 const DistrictPanel = ({ selectedFeature }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   // Only fetch admin data for geographic features, NOT for campaign stops
-  const shouldFetchAdminData = 
-    selectedFeature?.layerType && 
-    selectedFeature.layerType !== 'campaign-stop';
+  const adminLevel = !selectedFeature ? 'country' : selectedFeature.layerType === 'campaign-stop' ? null : selectedFeature.layerType;
+
+  const identifier = !selectedFeature 
+    ? null 
+    : selectedFeature.identifier;
 
   const { data: dbData, voterStats, loading, error } = useAdminData(
-    shouldFetchAdminData ? selectedFeature?.layerType : null,
-    shouldFetchAdminData ? selectedFeature?.identifier : null,
+    adminLevel,
+    identifier,
     selectedFeature?.identifierType || 'name'
   );
 
@@ -29,19 +32,15 @@ const DistrictPanel = ({ selectedFeature }) => {
     return (
       <CollapsedPanel 
         selectedFeature={selectedFeature}
+        isCountryView={!selectedFeature}
         dbData={dbData}
         onExpand={() => setIsExpanded(true)}
       />
     );
   }
 
-  // Handle no selection
-  if (!selectedFeature) {
-    return <EmptyPanel onCollapse={() => setIsExpanded(false)} />;
-  }
-
   // Handle campaign stop (no DB query needed)
-  if (selectedFeature.layerType === 'campaign-stop') {
+  if (selectedFeature?.layerType === 'campaign-stop') {
     return (
       <CampaignStopPanel 
         feature={selectedFeature}
@@ -69,7 +68,6 @@ const DistrictPanel = ({ selectedFeature }) => {
       />
     );
   }
-
   // Render based on layer type
   const renderPanel = () => {
     // Merge voter stats into the data object for panels
@@ -77,6 +75,15 @@ const DistrictPanel = ({ selectedFeature }) => {
       ...dbData,
       voterStats: voterStats
     };
+
+    if (!selectedFeature) {
+      return (
+        <CountryInfoPanel 
+          data={dataWithStats}
+          onCollapse={() => setIsExpanded(false)}
+        />
+      );
+    }
 
     switch (selectedFeature.layerType) {
       case 'districts':

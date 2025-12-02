@@ -13,7 +13,7 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    if (!adminLevel || !identifier) {
+    if (!adminLevel || !identifier && adminLevel !== 'country') {
       setData(null);
       setVoterStats(null);
       return;
@@ -34,6 +34,54 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
           : identifier;
 
         switch (adminLevel) {
+          case 'country': {
+            const { data: countryData, error: err } = await supabase
+              .from('mv_country_stats')
+              .select('*')
+              .single();
+            
+            if (err) {
+              queryError = err;
+              break;
+            }
+
+            result = {
+              id: 'country-uganda',
+              name: countryData.country_name,
+              country_code: countryData.country_code,
+              total_districts: countryData.total_districts,
+              total_constituencies: countryData.total_constituencies,
+              total_subcounties: countryData.total_subcounties,
+              total_polling_stations: countryData.total_polling_stations,
+              population: countryData.total_population,
+              registered_voters_2021: countryData.registered_voters_2021,
+              last_updated: countryData.last_updated
+            };
+
+            statsResult = {
+              // Primary fields for VoterStatisticsCard
+              voter_growth_percentage: countryData.voter_growth_percentage,
+              total_voters_2024: countryData.total_voters_2024,
+              polling_station_count: countryData.polling_station_count,
+              avg_voters_per_station: countryData.avg_voters_per_station,
+              
+              // Additional fields for compatibility and detailed views
+              registered_voters_2021: countryData.registered_voters_2021,
+              current_registered_voters: countryData.current_registered_voters,
+              total_polling_stations: countryData.total_polling_stations,
+              registration_percentage_2021: countryData.registration_percentage_2021,
+              current_registration_percentage: countryData.current_registration_percentage,
+              
+              // Alternative field names for backwards compatibility
+              total_registered: countryData.total_voters_2024,
+              registered: countryData.total_voters_2024,
+              polling_stations: countryData.polling_station_count,
+              pollingStations: countryData.polling_station_count,
+              growth_rate: countryData.voter_growth_percentage,
+              growthRate: countryData.voter_growth_percentage
+            };
+            break;
+          }
           case 'districts': {
             const matchField = identifierType === 'name' ? 'name_normalized' : 'district_code';
             
@@ -212,6 +260,5 @@ export const useAdminData = (adminLevel, identifier, identifierType = 'code') =>
 
     fetchData();
   }, [adminLevel, identifier, identifierType]);
-
   return { data, voterStats, loading, error };
 };
