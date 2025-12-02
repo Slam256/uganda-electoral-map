@@ -1,4 +1,4 @@
-export const VoterStatisticsCard = ({ stats, level = "district" }) => {
+export const VoterStatisticsCard = ({ stats }) => {
   if (!stats) return null;
 
   const formatNumber = (num) => {

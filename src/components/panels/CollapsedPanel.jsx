@@ -4,7 +4,7 @@ import Avatar from "../shared/Avatar";
 import { getCandidatePhoto } from "../../utils/candidatePhotos";
 import EmptyPanel from "./EmptyPanel";
 
-const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
+const CollapsedPanel = ({ selectedFeature, isCountryView, dbData, onExpand }) => {
   // Handle campaign stops with special UI
   if (selectedFeature?.layerType === 'campaign-stop') {
     const {
@@ -66,7 +66,7 @@ const CollapsedPanel = ({ selectedFeature, dbData, onExpand }) => {
     );
   }
 
-  if (!selectedFeature) {
+  if (!selectedFeature && !isCountryView) {
     return <EmptyPanel />;
   }
   return (
