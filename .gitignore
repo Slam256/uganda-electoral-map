@@ -74,3 +74,4 @@ supabase
 
 # Data
 data/
+.claude/worktrees/
